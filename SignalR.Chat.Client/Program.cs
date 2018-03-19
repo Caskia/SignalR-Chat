@@ -9,7 +9,7 @@ namespace SignalR.Chat.Client
 {
     internal class Program
     {
-        public static async Task<int> ExecuteAsync(string baseUrl)
+        public static async Task<int> ExecuteHubAsync(string baseUrl)
         {
             baseUrl = string.IsNullOrEmpty(baseUrl) ? "http://localhost:5000/chat" : baseUrl;
 
@@ -26,7 +26,7 @@ namespace SignalR.Chat.Client
                 // Set up handler
                 connection.On<string>("Send", Console.WriteLine);
 
-                await ConnectAsync(connection);
+                await HubConnectAsync(connection);
 
                 Console.WriteLine("Connected to {0}", baseUrl);
 
@@ -48,7 +48,7 @@ namespace SignalR.Chat.Client
             return 0;
         }
 
-        private static async Task ConnectAsync(HubConnection connection)
+        private static async Task HubConnectAsync(HubConnection connection)
         {
             // Keep trying to until we can start
             while (true)
@@ -76,7 +76,7 @@ namespace SignalR.Chat.Client
 
             for (int i = 0; i < 3000; i++)
             {
-                ExecuteAsync(connectUrl).Wait();
+                ExecuteHubAsync(connectUrl).Wait();
             }
 
             Console.ReadKey();
