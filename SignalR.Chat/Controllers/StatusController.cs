@@ -7,10 +7,10 @@ namespace SignalR.Chat.Controllers
     [Route("1/status")]
     public class StatusController : Controller
     {
-        private readonly PersistentConnectionManager _persistentConnectionManager;
+        private readonly PersistentHubConnectionManager _persistentConnectionManager;
 
         public StatusController(
-            PersistentConnectionManager persistentConnectionManager
+            PersistentHubConnectionManager persistentConnectionManager
             )
         {
             _persistentConnectionManager = persistentConnectionManager;

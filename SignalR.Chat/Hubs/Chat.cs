@@ -7,9 +7,9 @@ namespace SignalR.Chat.Hubs
 {
     public class Chat : Hub
     {
-        private readonly PersistentConnectionManager _persistentConnectionManager;
+        private readonly PersistentHubConnectionManager _persistentConnectionManager;
 
-        public Chat(PersistentConnectionManager persistentConnectionManager)
+        public Chat(PersistentHubConnectionManager persistentConnectionManager)
         {
             _persistentConnectionManager = persistentConnectionManager;
         }
