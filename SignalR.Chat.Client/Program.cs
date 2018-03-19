@@ -1,9 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR.Client;
+﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Net.WebSockets;
+using System.Threading;
+using System.IO;
+using System.Text;
 
 namespace SignalR.Chat.Client
 {
@@ -48,6 +51,45 @@ namespace SignalR.Chat.Client
             return 0;
         }
 
+        public static async Task ExecuteWebSocketAsync(string baseUrl)
+        {
+            var client = new ClientWebSocket();
+            await client.ConnectAsync(new Uri(baseUrl), CancellationToken.None);
+
+            try
+            {
+                //while (client.State == WebSocketState.Open)
+                //{
+                //    var buffer = new ArraySegment<byte>(new Byte[1024 * 16]);
+                //    string serializedMessage = null;
+                //    WebSocketReceiveResult result = null;
+                //    using (var ms = new MemoryStream())
+                //    {
+                //        do
+                //        {
+                //            result = await client.ReceiveAsync(buffer, CancellationToken.None).ConfigureAwait(false);
+                //            ms.Write(buffer.Array, buffer.Offset, result.Count);
+                //        }
+                //        while (!result.EndOfMessage);
+
+                //        ms.Seek(0, SeekOrigin.Begin);
+
+                //        using (var reader = new StreamReader(ms, Encoding.UTF8))
+                //        {
+                //            serializedMessage = await reader.ReadToEndAsync().ConfigureAwait(false);
+                //        }
+                //    }
+                //}
+
+                //client.Dispose();
+            }
+            catch (Exception ex)
+            {
+                client.Dispose();
+                throw ex;
+            }
+        }
+
         private static async Task HubConnectAsync(HubConnection connection)
         {
             // Keep trying to until we can start
@@ -67,16 +109,24 @@ namespace SignalR.Chat.Client
 
         private static void Main(string[] args)
         {
-            var connectUrl = "http://localhost:62941/chat";
+            var chatUrl = "http://localhost:62941/chat";
+            var stockUrl = "ws://localhost:62941/stock";
 
             //Parallel.For(0, 1000, async i =>
             //{
             //    await ExecuteAsync(connectUrl);
             //});
 
-            for (int i = 0; i < 3000; i++)
+            for (int i = 0; i < 200; i++)
             {
-                ExecuteHubAsync(connectUrl).Wait();
+                //ExecuteHubAsync(chatUrl).Wait();
+
+                Parallel.For(0, 100, async j =>
+                {
+                    await ExecuteWebSocketAsync(stockUrl);
+                });
+
+                //ExecuteWebSocketAsync(stockUrl).Wait();
             }
 
             Console.ReadKey();

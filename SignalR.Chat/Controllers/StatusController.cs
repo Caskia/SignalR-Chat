@@ -7,22 +7,27 @@ namespace SignalR.Chat.Controllers
     [Route("1/status")]
     public class StatusController : Controller
     {
-        private readonly PersistentHubConnectionManager _persistentConnectionManager;
+        private readonly PersistentConnectionManager _persistentConnectionManager;
+        private readonly PersistentHubConnectionManager _persistentHubConnectionManager;
 
         public StatusController(
-            PersistentHubConnectionManager persistentConnectionManager
+            PersistentConnectionManager persistentConnectionManager,
+            PersistentHubConnectionManager persistentHubConnectionManager
             )
         {
             _persistentConnectionManager = persistentConnectionManager;
+            _persistentHubConnectionManager = persistentHubConnectionManager;
         }
 
         public Task<dynamic> Index()
         {
-            var count = _persistentConnectionManager.All.Count;
+            var hubCount = _persistentHubConnectionManager.All.Count;
+            var websocketCount = _persistentConnectionManager.All.Count;
 
             return Task.FromResult<dynamic>(new
             {
-                count
+                websocketCount,
+                hubCount
             });
         }
     }

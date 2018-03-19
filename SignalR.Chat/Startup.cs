@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using SignalR.Chat.EndPoints;
 using SignalR.Chat.Services;
 
 namespace SignalR.Chat
@@ -27,6 +28,11 @@ namespace SignalR.Chat
                 routes.MapHub<Hubs.Chat>("/chat");
             });
 
+            app.UseSockets(o =>
+            {
+                o.MapEndPoint<StockEndPoint>("/stock");
+            });
+
             app.UseFileServer();
         }
 
@@ -36,7 +42,12 @@ namespace SignalR.Chat
         {
             services.AddSingleton<PersistentHubConnectionManager, PersistentHubConnectionManager>();
 
+            services.AddSingleton<PersistentConnectionManager, PersistentConnectionManager>();
+
             services.AddMvc();
+
+            services.AddSockets();
+            services.AddEndPoint<StockEndPoint>();
 
             services.AddSignalR();
         }
