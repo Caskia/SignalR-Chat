@@ -109,8 +109,8 @@ namespace SignalR.Chat.Client
 
         private static void Main(string[] args)
         {
-            var chatUrl = "http://localhost:62941/chat";
-            var stockUrl = "ws://localhost:62941/stock";
+            var chatUrl = "http://localhost:5001/chat";
+            var stockUrl = "ws://localhost:5001/stock";
 
             //Parallel.For(0, 1000, async i =>
             //{
