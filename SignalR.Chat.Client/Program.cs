@@ -109,23 +109,28 @@ namespace SignalR.Chat.Client
 
         private static void Main(string[] args)
         {
-            var chatUrl = "http://localhost:5001/chat";
-            var stockUrl = "ws://localhost:5001/stock";
+            var chatUrl = "http://192.168.31.125:5001/chat";
+            var stockUrl = "ws://192.168.31.125:5001/stock";
 
             //Parallel.For(0, 1000, async i =>
             //{
-            //    await ExecuteAsync(connectUrl);
+            //    await ExecuteHubAsync(connectUrl);
             //});
 
-            for (int i = 0; i < 200; i++)
+
+            for (int i = 0; i < 20; i++)
             {
+                
+
                 //ExecuteHubAsync(chatUrl).Wait();
 
                 Parallel.For(0, 100, async j =>
                 {
+                    //await ExecuteHubAsync(chatUrl);
                     await ExecuteWebSocketAsync(stockUrl);
                 });
 
+                //ExecuteHubAsync(chatUrl).Wait();
                 //ExecuteWebSocketAsync(stockUrl).Wait();
             }
 
