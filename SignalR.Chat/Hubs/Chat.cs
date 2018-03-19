@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using SignalR.Chat.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -6,6 +7,13 @@ namespace SignalR.Chat.Hubs
 {
     public class Chat : Hub
     {
+        private readonly PersistentConnectionManager _persistentConnectionManager;
+
+        public Chat(PersistentConnectionManager persistentConnectionManager)
+        {
+            _persistentConnectionManager = persistentConnectionManager;
+        }
+
         public async Task JoinRoom(string roomName)
         {
             await Groups.AddAsync(this.Context.ConnectionId, roomName);
@@ -13,11 +21,15 @@ namespace SignalR.Chat.Hubs
 
         public override Task OnConnectedAsync()
         {
+            _persistentConnectionManager.OnConnectedAsync(this.Context.Connection);
+
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
+            _persistentConnectionManager.OnDisconnectedAsync(this.Context.Connection);
+
             return base.OnDisconnectedAsync(exception);
         }
 

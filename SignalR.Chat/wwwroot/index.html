@@ -17,98 +17,105 @@
         </div>
         <form id="sendmessage" action="#">
             <input type="text" id="new-message" />
-            <input type="submit" id="send" value="Send" class="send" />
+            <input type="button" id="send" value="Send" class="send" />
         </form>
     </div>
     <script>
 
-        //var roomName = 'test-room';
-        //var connectUrl = `ws://${document.location.host}/chat`;
-        //var webSocket = new WebSocket(connectUrl);
-
-        //webSocket.onopen = function (msg) {
-        //    console.log(msg);
-        //}
-
-        //webSocket.onerror = function (msg) {
-        //    console.log(msg);
-        //}
-
-        //webSocket.onmessage = function (msg) {
-        //    console.log(msg.data);
-        //}
-
-        //webSocket.onclose = function (msg) {
-        //    console.log(msg);
-        //}
-        //document.getElementById("btnJoinRoom").onclick = function (e) {
-        //    roomName = document.getElementById("txtRoomName").value || roomName;
-
-        //    webSocket.send(JSON.stringify({ "protocol": "json" }));
-        //    webSocket.send(JSON.stringify({ "type": 1, "invocationId": "0", "target": "JoinRoom", "arguments": ["test-room"] }));
-        //};
-
-        var transportType = signalR.TransportType[getParameterByName('transport')] || signalR.TransportType.WebSockets;
-        var http = new signalR.HttpConnection(`http://${document.location.host}/chat`, { transport: transportType });
-        var connection = new signalR.HubConnection(http);
         var roomName = 'test-room';
+        var connectUrl = `ws://${document.location.host}/chat`;
+        var webSocket = new WebSocket(connectUrl);
+        var invocationId = 0;
 
-        connection.onClosed = e => {
-            if (e) {
-                appendLine('Connection closed with error: ' + e, 'red');
-            }
-            else {
-                appendLine('Disconnected', 'green');
-            }
-        };
+        webSocket.onopen = function (msg) {
+            webSocket.send(JSON.stringify({ "protocol": "json" }) + String.fromCharCode(0x1e));
+            console.log(msg);
+        }
 
-        connection.on('Send', (roomName, message) => {
-            var roomNameElement = document.createElement('b');
-            roomNameElement.innerText = roomName + ':';
+        webSocket.onerror = function (msg) {
+            console.log(msg);
+        }
 
-            var msgElement = document.createElement('span');
-            msgElement.innerText = ' ' + message;
+        webSocket.onmessage = function (msg) {
+            console.log(msg.data);
+        }
 
-            var child = document.createElement('li');
-            child.appendChild(roomNameElement);
-            child.appendChild(msgElement);
-            document.getElementById('messages').appendChild(child);
-        });
-
-        connection.start().catch(err => appendLine(err, 'red'));
-
-        function appendLine(line, color) {
-            let child = document.createElement('li');
-            if (color) {
-                child.style.color = color;
-            }
-            child.innerText = line;
-            document.getElementById('messages').appendChild(child);
-        };
-
+        webSocket.onclose = function (msg) {
+            console.log(msg);
+        }
         document.getElementById("btnJoinRoom").onclick = function (e) {
             roomName = document.getElementById("txtRoomName").value || roomName;
 
-            connection.invoke('JoinRoom', roomName);
+            webSocket.send(JSON.stringify({ "type": 1, "invocationId": invocationId++ + '', "target": "JoinRoom", "arguments": [roomName] }) + String.fromCharCode(0x1e));
         };
 
-        document.getElementById('sendmessage').addEventListener('submit', event => {
+        document.getElementById('sendmessage').onclick = function (e) {
             var data = document.getElementById('new-message').value;
-            connection.invoke('Send', roomName, data).catch(err => appendLine(err, 'red'));
-            event.preventDefault();
-        });
 
-        function getParameterByName(name, url) {
-            if (!url) {
-                url = window.location.href;
-            }
-            name = name.replace(/[\[\]]/g, "\\$&");
-            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        };
+            webSocket.send(JSON.stringify({ "type": 1, "invocationId": invocationId++ + '', "target": "Send", "arguments": [roomName, data] }) + String.fromCharCode(0x1e));
+        }
+
+            //var transportType = signalR.TransportType[getParameterByName('transport')] || signalR.TransportType.WebSockets;
+            //var http = new signalR.HttpConnection(`http://${document.location.host}/chat`, { transport: transportType });
+            //var connection = new signalR.HubConnection(http);
+            //var roomName = 'test-room';
+
+            //connection.onClosed = e => {
+            //    if (e) {
+            //        appendLine('Connection closed with error: ' + e, 'red');
+            //    }
+            //    else {
+            //        appendLine('Disconnected', 'green');
+            //    }
+            //};
+
+            //connection.on('Send', (roomName, message) => {
+            //    var roomNameElement = document.createElement('b');
+            //    roomNameElement.innerText = roomName + ':';
+
+            //    var msgElement = document.createElement('span');
+            //    msgElement.innerText = ' ' + message;
+
+            //    var child = document.createElement('li');
+            //    child.appendChild(roomNameElement);
+            //    child.appendChild(msgElement);
+            //    document.getElementById('messages').appendChild(child);
+            //});
+
+            //connection.start().catch(err => appendLine(err, 'red'));
+
+            //function appendLine(line, color) {
+            //    let child = document.createElement('li');
+            //    if (color) {
+            //        child.style.color = color;
+            //    }
+            //    child.innerText = line;
+            //    document.getElementById('messages').appendChild(child);
+            //};
+
+            //document.getElementById("btnJoinRoom").onclick = function (e) {
+            //    roomName = document.getElementById("txtRoomName").value || roomName;
+
+            //    connection.invoke('JoinRoom', roomName);
+            //};
+
+            //document.getElementById('sendmessage').onclick = function (e) {
+            //    var data = document.getElementById('new-message').value;
+            //    connection.invoke('Send', roomName, data).catch(err => appendLine(err, 'red'));
+            //    event.preventDefault();
+            //}
+
+            //function getParameterByName(name, url) {
+            //    if (!url) {
+            //        url = window.location.href;
+            //    }
+            //    name = name.replace(/[\[\]]/g, "\\$&");
+            //    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            //        results = regex.exec(url);
+            //    if (!results) return null;
+            //    if (!results[2]) return '';
+            //    return decodeURIComponent(results[2].replace(/\+/g, " "));
+            //};
     </script>
 </body>
 </html>
