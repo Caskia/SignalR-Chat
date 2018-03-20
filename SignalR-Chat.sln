@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalR.Chat", "SignalR.Cha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalR.Chat.Client", "SignalR.Chat.Client\SignalR.Chat.Client.csproj", "{641E0421-69B4-4278-B499-4F0F24153BC2}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0ECB2EF6-922A-4AB4-896B-BB87F16CC0FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{641E0421-69B4-4278-B499-4F0F24153BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{641E0421-69B4-4278-B499-4F0F24153BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{641E0421-69B4-4278-B499-4F0F24153BC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ECB2EF6-922A-4AB4-896B-BB87F16CC0FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ECB2EF6-922A-4AB4-896B-BB87F16CC0FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ECB2EF6-922A-4AB4-896B-BB87F16CC0FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ECB2EF6-922A-4AB4-896B-BB87F16CC0FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
