@@ -7,7 +7,7 @@ namespace SignalR.Chat
     {
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://0.0.0.0:5001")
+                .UseUrls("http://0.0.0.0:5002")
                 .UseStartup<Startup>()
                 .Build();
 

@@ -7,6 +7,7 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
 namespace SignalR.Chat.Client
 {
@@ -109,25 +110,36 @@ namespace SignalR.Chat.Client
 
         private static void Main(string[] args)
         {
-            var chatUrl = "http://192.168.31.125:5001/chat";
-            var stockUrl = "ws://192.168.31.125:5001/stock";
+            //var list = new List<byte[]>();
+
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    list.Add(Enumerable.Repeat((byte)0x20, 1024 * 1024 * 1024).ToArray());
+            //}
+
+            var chatUrl = "http://192.168.31.125:5002/chat";
+            var stockUrl = "ws://192.168.31.125:5002/stock";
+            //stockUrl = "ws://localhost:5001/chat?access_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1MTgxNTI1NjgsImV4cCI6MTU0OTY4ODU2OCwiaXNzIjoiSGljb2luIiwiYXVkIjpbIkhpY29pbi9yZXNvdXJjZXMiLCJIaWNvaW4iXSwiY2xpZW50X2lkIjoicm8uY2xpZW50Iiwic3ViIjoiMjI5MDY1NzgzNTMwMDQ1NDQiLCJhdXRoX3RpbWUiOjE1MTgxNTI1NjgsImlkcCI6ImxvY2FsIiwiZW1haWwiOiIxMjM0Mzk4ODRAcXEuY29tIiwidXNlcm5hbWUiOiJDYXNwZXIiLCJyb2xlIjoidXNlciIsInNjb3BlIjpbIkhpY29pbiIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJwYXNzd29yZCJdfQ.LoKWy58X6hIuBBMbyuygSnEPqxuRuNc_H0MvlAAaSnr69ui7QIwG7TTuEUFZpLVmhogQZukn6zmG3NShl0eUZgxxeAxeCTec0euPljLGXaKjvTfe4czE3M7-ie0LEW1Aoe8LZ34uBnVzZBcIywfBpYCcbkE-ElD7X-EoCAkBNFR6at61WtPolljUGwDHbdWX994NUxt01rhqych_yAOrGkieiS-Nb_VTkyqwhwUhzl16ijuwL4zLHo2V-ZBjTitgtAUcbQgMCynMHVPGIbLoQnlOQlDPbHcksdGFynpCR9SbDN9qRrv8NUEmR9CNhbfzhpHXKbsfxERsHpP9UIDe-A";
 
             //Parallel.For(0, 1000, async i =>
             //{
             //    await ExecuteHubAsync(connectUrl);
             //});
 
-
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 100; i++)
             {
-                
-
                 //ExecuteHubAsync(chatUrl).Wait();
 
-                Parallel.For(0, 100, async j =>
+                Parallel.For(0, 200, async j =>
                 {
                     //await ExecuteHubAsync(chatUrl);
-                    await ExecuteWebSocketAsync(stockUrl);
+                    try
+                    {
+                        await ExecuteWebSocketAsync(stockUrl);
+                    }
+                    catch
+                    {
+                    }
                 });
 
                 //ExecuteHubAsync(chatUrl).Wait();
@@ -137,4 +149,22 @@ namespace SignalR.Chat.Client
             Console.ReadKey();
         }
     }
+}
+
+public class City
+{
+    public long Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string Url { get; set; }
+}
+
+public class Province
+{
+    public List<City> Cities { get; set; }
+
+    public long Id { get; set; }
+
+    public string Name { get; set; }
 }
