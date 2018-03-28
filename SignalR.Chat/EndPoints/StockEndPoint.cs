@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Sockets;
 using SignalR.Chat.Services;
 
@@ -21,6 +22,10 @@ namespace SignalR.Chat.EndPoints
             {
                 while (await connection.Transport.Reader.WaitToReadAsync())
                 {
+                    if (connection.Transport.Reader.TryRead(out var buffer))
+                    {
+                        var inputContent = Encoding.UTF8.GetString(buffer);
+                    }
                 }
             }
             finally
