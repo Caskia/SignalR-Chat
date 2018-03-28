@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.Sockets;
+﻿using Microsoft.AspNetCore.Sockets;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,6 +23,10 @@ namespace SignalR.Chat.Services
         public PersistentConnectionManager(
             )
         {
+            Task.Factory.StartNew(async () =>
+            {
+                await HeartBeatOnTimeAsync();
+            });
         }
 
         #endregion Ctor
@@ -45,5 +48,22 @@ namespace SignalR.Chat.Services
         }
 
         #endregion Connection
+
+        private async Task HeartBeatOnTimeAsync()
+        {
+            var content = new byte[] { 0x1e };
+
+            while (true)
+            {
+                var tasks = new List<Task>(connectionList.Count);
+                foreach (var connection in connectionList)
+                {
+                    tasks.Add(connection.Transport.Writer.WriteAsync(content));
+                }
+                await Task.WhenAll(tasks);
+
+                await Task.Delay(15000);
+            }
+        }
     }
 }
